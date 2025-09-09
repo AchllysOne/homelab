@@ -1,0 +1,16 @@
+services:
+  peanut:
+    image: brandawg93/peanut:latest
+    container_name: PeaNUT
+    restart: unless-stopped
+    volumes:
+      - /path/to/peanut/config:/config
+      - /etc/nut:/etc/nut:ro
+    ports:
+      - "8092:8080"
+    environment:
+      - WEB_PORT=8080
+      - NUT_HOST=localhost
+      - NUT_PORT=3493
+      - NUT_USER=
+      - NUT_PASSWORD=

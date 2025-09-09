@@ -1,0 +1,26 @@
+title: 
+description: 
+theme: dark
+disableCollapse: false
+color: purple
+uptime: true
+hideVersion: true
+useEqualHeights: true
+headerStyle: boxedWidgets
+favicon: /icons/purple.png
+providers:
+
+quicklaunch:
+  searchDescriptions: true
+  hideInternetSearch: false
+  showSearchSuggestions: true
+  hideVisitURL: false
+  provider: brave # google, duckduckgo, bing, baidu, brave or custom
+
+background:
+  image: /backgrounds/animation-of-stars-15-fps.gif
+  backdrop-filter: blur(1px);
+  backdrop-opacity: 100
+  saturate: 47 # 0, 50, 100... see https://tailwindcss.com/docs/backdrop-saturate
+  brightness: 50 # 0, 50, 75... see https://tailwindcss.com/docs/backdrop-brightness
+  opacity: 77 # 0-100

@@ -1,0 +1,18 @@
+services:
+  duplicati:
+    image: lscr.io/linuxserver/duplicati:latest
+    container_name: duplicati
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Toronto
+      - SETTINGS_ENCRYPTION_KEY=
+      - DUPLICATI__WEBSERVICE_PASSWORD=
+    volumes:
+      - /path/to/duplicati/config:/config 
+      - /path/to/immich:/immich
+      - /path/to/vaultwarden:/vaultwarden
+    ports:
+      - 8200:8200
+    network_mode: host  # Use host network mode!!!
+    restart: unless-stopped

@@ -1,0 +1,20 @@
+services:
+  vaultwarden:
+    container_name: vaultwarden
+    image: vaultwarden/server:latest
+    restart: unless-stopped
+    ports:
+      - "8085:80"
+    volumes:
+      - /path/to/vaultwarden/bitwarden:/data:rw
+    environment:
+      - ADMIN_TOKEN=123
+      - WEBSOCKET_ENABLED=true
+      - SIGNUPS_ALLOWED=false
+      - SMTP_HOST=
+      - SMTP_FROM=
+      - SMTP_PORT=587
+      - SMTP_SSL=true
+      - SMTP_USERNAME=
+      - SMTP_PASSWORD=
+      - DOMAIN=

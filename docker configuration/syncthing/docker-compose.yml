@@ -1,0 +1,22 @@
+syncthing:
+  image: lscr.io/linuxserver/syncthing:latest
+  container_name: syncthing
+  hostname: syncthing #optional
+  environment:
+    - PUID=1000
+    - PGID=1000
+    - TZ=America/Toronto
+  volumes:
+    - /path/to/syncthing/config:/config
+    - /path/to/syncthing/files:/files
+    - /path/to/syncthing/programs:/programs
+    - /path/to/syncthing/printing:/printing
+    - /path/to/syncthing/vrc:/vrc
+    - /path/to/syncthing/djing:/djing
+    - /path/to/syncthing/random:/random
+  ports:
+    - 8384:8384
+    - 22000:22000/tcp
+    - 22000:22000/udp
+    - 21027:21027/udp
+  restart: unless-stopped

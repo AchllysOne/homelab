@@ -1,0 +1,17 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "3000:80"
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: tld
+      TZ: America/Toronto  
+      PORT: 80
+    volumes:
+      - /path/to/homepage/config:/config
+      - /path/to/icons:/app/public/icons
+      - /path/to/backgrounds:/app/public/backgrounds
+    restart: unless-stopped

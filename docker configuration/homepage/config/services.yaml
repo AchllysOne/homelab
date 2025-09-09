@@ -1,0 +1,110 @@
+- 'Media Servers & Streaming':
+    - Airsonic-Advanced:
+        href: 
+        icon: /icons/airsonic.svg
+        description: Music Streaming
+
+    - JellyFin:
+        href: 
+        icon:  /icons/jellyfin.svg
+        description: stream stuffs
+        widget:
+           type: jellyfin
+           url: 
+           key: 
+           enableBlocks: true 
+           enableNowPlaying: true 
+           enableUser: true 
+           enableMediaControl: false 
+           showEpisodeNumber: true 
+           expandOneStreamToTwoRows: false 
+
+- 'Monitoring & Status':
+    - Uptime-Kuma:
+        href:
+        icon: /icons/uptime-kuma.svg
+        description: docker services
+        widget:
+            type: uptimekuma
+            url:
+            slug: 
+
+    - Grafana:
+        href:
+        icon: /icons/grafana_icon.svg
+        description: Realtime system monitoring
+        widget:
+            type: grafana
+            version: 1 
+            alerts: alertmanager 
+            url: 
+            username: 
+            password: 
+
+    - Netdata:
+        href: 
+        icon: /icons/netdata.svg
+        description: Realtime system monitoring
+        widget:
+            type: netdata
+            url: 
+
+    - Dozzle:
+        href: 
+        icon: /icons/dozzle.svg
+        description:  Real-time docker logging
+
+    - PeaNUT:
+        href: 
+        icon: /icons/nut.svg
+        description: Realtime UPS monitoring
+        widget:
+            type: peanut
+            url:
+            key: 
+            username: 
+            password: 
+
+- 'File Sync & Backup':
+    - Duplicati:
+        href: 
+        icon: /icons/duplicati.svg
+        description: Offsite backups
+
+    - Syncthing:
+        href: 
+        icon: /icons/syncthing.svg
+        description: file synchronization
+
+- 'Productivity & Tools':
+    - Planka:
+        href: 
+        icon: /icons/planka.svg
+        description: Twello
+
+    -  It-tools:
+        href: 
+        icon: /icons/it-tools.svg
+        description: IT-related tools
+
+- 'Security & Authentication':
+    - VaultWarden:
+        href: 
+        icon: /icons/vaultwarden-light.svg
+        description: password manager
+
+    -  LinkWarden:
+        href: 
+        icon: /icons/linkwarden.png
+        description:  links n stuff
+
+- 'Photo Management':
+    - Immich:
+        href: 
+        icon: /icons/immich.svg
+        description: photo backup
+        widget:
+            type: immich
+            url:
+            key: 
+            version: 2
