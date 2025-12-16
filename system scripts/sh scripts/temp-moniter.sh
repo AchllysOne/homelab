@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # Configuration
-WEBHOOK_URL="<webhook>"
+WEBHOOK_URL=""
 ALERT_THRESHOLD=60
-ALERT_USER="<user id>"
+ALERT_USER="<>"
 
 # Create temp file
 JSON_FILE=$(mktemp)

@@ -1,9 +1,8 @@
 #!/bin/bash
 
-case $1 in
+case "$1" in
     earlyshutdown)
-        logger -t upssched-cmd "Trigger: earlyshutdown"
-        /home/scripts/ups_shutdown.sh
+        logger -t upssched-cmd "Trigger: earlyshutdown (power offline > 60s)"
         /usr/sbin/upsmon -c fsd
         ;;
     *)

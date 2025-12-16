@@ -1,8 +1,8 @@
 #!/bin/bash
 
-POOL_NAME="achz3"
-DISCORD_WEBHOOK_URL="<webhook>"
-USER_ID="User ID>"
+POOL_NAME="ach"
+DISCORD_WEBHOOK_URL=""
+USER_ID=""
 
 # Function to send a message to Discord
 send_discord_message() {

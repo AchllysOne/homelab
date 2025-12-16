@@ -1,25 +1,58 @@
 #!/bin/sh
+set -eu
 
-# Delay to ensure the network is ready
-sleep 20
+START_DELAY=30
 
-# Start all Docker containers
-sudo docker start $(sudo docker ps -a -q)
+WEBHOOK_URL=""
+USER_ID=""
 
-# Discord webhook URL
-webhook_url="<Webhook>"
+DOCKER_BIN="docker"
 
-# Your Discord user ID
-user_id="<User ID>"
+sleep "$START_DELAY"
 
-# Get the list of all running Docker containers
-docker_containers=$(sudo docker ps --format "{{.Names}}" | sed 's/^/• /')
+# Wait for Docker daemon + networking
+i=0
+while :; do
+  if $DOCKER_BIN info >/dev/null 2>&1 && \
+     $DOCKER_BIN network ls >/dev/null 2>&1; then
+    break
+  fi
+  i=$((i + 1))
+  [ "$i" -ge 90 ] && break
+  sleep 1
+done
 
-# Prepare the message
-message=":satellite: **Server Status:**\n\n:green_circle: The server is back online!\n\n:card_file_box: **Loaded Docker Containers:**\n\`\`\`\n${docker_containers}\n\`\`\`"
+# Start only stopped/exited containers
+STOPPED_IDS="$($DOCKER_BIN ps -aq -f status=exited -f status=created 2>/dev/null || true)"
 
-# Escape newlines in the message for JSON
-message=$(echo "$message" | sed ':a;N;$!ba;s/\n/\\n/g')
+if [ -n "$STOPPED_IDS" ]; then
+  for id in $STOPPED_IDS; do
+    $DOCKER_BIN start "$id" >/dev/null 2>&1 || true
+  done
+fi
 
-# Send the notification to Discord
-curl -H "Content-Type: application/json" -X POST -d "{\"content\": \"<@${user_id}> $message\"}" "$webhook_url"
+# Build running container list
+containers="$($DOCKER_BIN ps --format '{{.Names}}' 2>/dev/null | sed 's/^/• /')"
+[ -n "$containers" ] || containers="• (none)"
+
+json_escape() {
+  printf '%s' "$1" | sed \
+    -e 's/\\/\\\\/g' \
+    -e 's/"/\\"/g' \
+    -e ':a;N;$!ba;s/\n/\\n/g'
+}
+
+message="$(printf '%s\n' \
+  ':satellite: **Server Status**' \
+  '' \
+  ':green_circle: **Server is back online**' \
+  '' \
+  ':card_file_box: **Running Docker Containers:**' \
+  '```' \
+  "$containers" \
+  '```')"
+
+payload="$(printf '{"content":"%s"}' "$(json_escape "<@${USER_ID}> ${message}")")"
+
+curl -fsS -H "Content-Type: application/json" \
+  -X POST -d "$payload" "$WEBHOOK_URL" >/dev/null
