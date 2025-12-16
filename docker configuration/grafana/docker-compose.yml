@@ -1,11 +1,11 @@
 services:
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana-oss:latest
     container_name: grafana
-    restart: unless-stopped
     ports:
-     - '3008:3000'
+      - "3008:3000"
+    environment:
+      - TZ=America/Toronto
     volumes:
-      - grafana-storage:/var/lib/grafana
-volumes:
-  grafana-storage: {}
+      - /ach/volumes/grafana:/var/lib/grafana
+    restart: unless-stopped

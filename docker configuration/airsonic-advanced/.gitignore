@@ -1,0 +1,22 @@
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Local paths / mount points
+/ach/
+/data/
+/volumes/
+/media/
+
+# Docker runtime stuff
+docker-compose.override.yml
+
+# Secrets
+*.key
+*.pem
+*.ppk
+*.conf
+
+# Logs
+*.log

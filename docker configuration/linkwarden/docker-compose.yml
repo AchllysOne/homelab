@@ -4,24 +4,26 @@ services:
     env_file: .env
     restart: always
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - /ach/volumes/linkwarden/pgdata:/var/lib/postgresql/data
+
   linkwarden:
     env_file: .env
     environment:
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
     restart: always
-    image: ghcr.io/linkwarden/linkwarden:latest # 
+    image: ghcr.io/linkwarden/linkwarden:latest
     ports:
       - 3006:3000
     volumes:
-      - ./data:/data/data
+      - /ach/volumes/linkwarden/data:/data/data
     depends_on:
       - postgres
       - meilisearch
+
   meilisearch:
     image: getmeili/meilisearch:v1.12.8
     restart: always
     env_file:
       - .env
     volumes:
-      - ./meili_data:/meili_data
+      - /ach/volumes/linkwarden/meili_data:/meili_data

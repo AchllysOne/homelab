@@ -1,18 +1,16 @@
 services:
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
+    image: ghcr.io/google/cadvisor:v0.53.0
     container_name: cadvisor
+    privileged: true
+    devices:
+      - /dev/kmsg
     ports:
-      - 8091:8080
+      - "8080:8080"
     volumes:
       - /:/rootfs:ro
-      - /var/run:/var/run:rw
+      - /var/run:/var/run:ro
       - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    depends_on:
-      - redis
-  redis:
-    image: redis:latest
-    container_name: redis
-    ports:
-      - 6379:6379
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+    restart: unless-stopped

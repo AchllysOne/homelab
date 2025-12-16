@@ -3,12 +3,12 @@ services:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     volumes:
-      - /path/to/containers/immich/upload:/usr/src/app/upload
+      - /ach/media/immich/upload:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
     ports:
-      - 2803:2283
+      - "2803:2283"
     depends_on:
       - redis
       - database
@@ -16,13 +16,13 @@ services:
     healthcheck:
       disable: false
     networks:
-      - ach  
+      - ach
 
   immich-machine-learning:
     container_name: immich_machine_learning
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
     volumes:
-      - /path/to/docker/containers/immich/model-cache:/cache
+      - /ach/volumes/immich/model-cache:/cache
     env_file:
       - .env
     restart: always
@@ -33,7 +33,7 @@ services:
 
   redis:
     container_name: immich_redis
-    image: docker.io/redis:6.2-alpine@sha256:e3b17ba9479deec4b7d1eeec1548a253acc5374d68d3b27937fcfe4df8d18c7e
+    image: redis:6.2-alpine
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
     restart: always
@@ -42,14 +42,14 @@ services:
 
   database:
     container_name: immich_postgres
-    image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
+    image: tensorchord/pgvecto-rs:pg14-v0.2.0
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_DB: ${DB_DATABASE_NAME}
-      POSTGRES_INITDB_ARGS: '--data-checksums'
+      POSTGRES_INITDB_ARGS: "--data-checksums"
     volumes:
-      - /path/to/database:/var/lib/postgresql/data
+      - /ach/volumes/immich/postgres:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready --dbname='${DB_DATABASE_NAME}' --username='${DB_USERNAME}' || exit 1"]
       interval: 5m
@@ -67,10 +67,7 @@ services:
       ]
     restart: always
     networks:
-      - ach  
-
-volumes:
-  model-cache:
+      - ach
 
 networks:
   ach:

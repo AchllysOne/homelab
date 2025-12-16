@@ -1,16 +1,19 @@
 services:
   peanut:
     image: brandawg93/peanut:latest
-    container_name: PeaNUT
+    container_name: peanut
     restart: unless-stopped
-    volumes:
-      - /path/to/peanut/config:/config
-      - /etc/nut:/etc/nut:ro
+
     ports:
       - "8092:8080"
+
+    volumes:
+      - /ach/volumes/peanut:/config
+
     environment:
       - WEB_PORT=8080
-      - NUT_HOST=localhost
-      - NUT_PORT=3493
-      - NUT_USER=
-      - NUT_PASSWORD=
+      - UPS_HOST=172.17.0.1        
+      - UPS_PORT=3493
+      - UPS_NAME=ups               # from: upsc -l
+      - UPS_USER=achllys
+      - UPS_PASSWORD=

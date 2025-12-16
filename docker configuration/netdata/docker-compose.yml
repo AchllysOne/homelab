@@ -1,6 +1,6 @@
 services:
   netdata:
-    image: netdata/netdata
+    image: netdata/netdata:latest
     container_name: netdata
     pid: host
     restart: unless-stopped
@@ -9,10 +9,14 @@ services:
       - SYS_ADMIN
     security_opt:
       - apparmor:unconfined
+    environment:
+      - TZ=America/Toronto
     volumes:
-      - /path/to/netdata/config:/etc/netdata
-      - /path/to/netdata/lib:/var/lib/netdata
-      - /path/to/netdata/cache:/var/cache/netdata
+      - /ach/volumes/netdata/config:/etc/netdata
+      - /ach/volumes/netdata/lib:/var/lib/netdata
+      - /ach/volumes/netdata/cache:/var/cache/netdata
+
+      # Host access for metrics
       - /:/host/root:ro,rslave
       - /etc/passwd:/host/etc/passwd:ro
       - /etc/group:/host/etc/group:ro
@@ -21,6 +25,8 @@ services:
       - /sys:/host/sys:ro
       - /etc/os-release:/host/etc/os-release:ro
       - /var/log:/host/var/log:ro
+
+      # Docker metrics
       - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - "19999:19999"

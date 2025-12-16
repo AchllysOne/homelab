@@ -5,17 +5,14 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=America/Toronto
-      - CONTEXT_PATH= #optional
-      - JAVA_OPTS= #optional
+      - TZ=America/Chicago
+      - CONTEXT_PATH= # optional
+      - JAVA_OPTS= # optional
     volumes:
-      - /path/to/airsonic-advanced/config:/config
-      - /path/to/airsonic-advanced/music:/music
-      - /path/to/airsonic-advanced/playlists:/playlists
-      - /path/to/airsonic-advanced/podcasts:/podcasts
-#     - /path/to/other media:/media #optional
+      - /ach/volumes/airsonic-advanced:/config
+      - /ach/media/music:/music
+      - /ach/media/airsonic-advanced/playlists:/playlists
+      - /ach/media/airsonic-advanced/podcasts:/podcasts
     ports:
-      - 4040:4040
-#    devices:
-#     - /dev/snd:/dev/snd #optional
+      - "4040:4040"
     restart: unless-stopped

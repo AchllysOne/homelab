@@ -1,9 +1,9 @@
 services:
   uptime-kuma:
     container_name: uptime-kuma
-    image: louislam/uptime-kuma:1
+    image: louislam/uptime-kuma:2
     volumes:
-      - /path/to/kuma:/app/data
+      - /ach/volumes/uptime-kuma:/app/data
     ports:
-      - '3001:3001'
-    restart: always
+      - "3001:3001"
+    restart: unless-stopped
