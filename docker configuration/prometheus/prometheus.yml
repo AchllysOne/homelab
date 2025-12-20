@@ -1,134 +1,71 @@
-services:
-  netdata:
-    image: netdata/netdata:latest
-    container_name: netdata
-    pid: host
-    restart: unless-stopped
-    cap_add:
-      - SYS_PTRACE
-      - SYS_ADMIN
-    security_opt:
-      - apparmor:unconfined
-    environment:
-      - TZ=America/Toronto
-    volumes:
-      # Netdata persistent paths on ZFS
-      - /ach/volumes/netdata/config:/etc/netdata
-      - /ach/volumes/netdata/lib:/var/lib/netdata
-      - /ach/volumes/netdata/cache:/var/cache/netdata
-
-      # Host access for metrics
-      - /:/host/root:ro,rslave
-      - /etc/passwd:/host/etc/passwd:ro
-      - /etc/group:/host/etc/group:ro
-      - /etc/localtime:/etc/localtime:ro
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /etc/os-release:/host/etc/os-release:ro
-      - /var/log:/host/var/log:ro
-
-      # Docker metrics
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    ports:
-      - "19999:19999"
-ach@achllys:/opt/compose/netdata$ ^C
-ach@achllys:/opt/compose/netdata$ cd ..
-ach@achllys:/opt/compose$ cd peanut
-ach@achllys:/opt/compose/peanut$ cat docker-compose.yml
-services:
-  peanut:
-    image: brandawg93/peanut:latest
-    container_name: peanut
-    restart: unless-stopped
-
-    ports:
-      - "8092:8080"
-
-    volumes:
-      - /ach/volumes/peanut:/config
-
-    environment:
-      - WEB_PORT=8080
-      - UPS_HOST=172.17.0.1        # Docker host (where NUT runs)
-      - UPS_PORT=3493
-      - UPS_NAME=ups               # from: upsc -l
-      - UPS_USER=achllys
-      - UPS_PASSWORD=Co6DcvSSY
-ach@achllys:/opt/compose/peanut$ ckea^C
-ach@achllys:/opt/compose/peanut$ cd ..
-ach@achllys:/opt/compose$ cd ^C
-ach@achllys:/opt/compose$ lsd
--bash: lsd: command not found
-ach@achllys:/opt/compose$ ls
-airsonic-advanced  alertmanager  cadvisor  diun  dozzle  grafana  homepage  immich  it-tools  jellyfin  linkwarden  netdata  peanut  prometheus  syncthing  uptime-kuma  vaultwarden  volumes  zfs-exporter
-ach@achllys:/opt/compose$ cd prometheus
-ach@achllys:/opt/compose/prometheus$ cat docker-compose.yml
-services:
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    command:
-      - --config.file=/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-    restart: unless-stopped
-    volumes:
-      - /opt/compose/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - /ach/volumes/prometheus/data:/prometheus
-
-ach@achllys:/opt/compose/prometheus$ cat docker-compose.yml^C
-ach@achllys:/opt/compose/prometheus$ cat prometheus/
-cat: prometheus/: No such file or directory
-ach@achllys:/opt/compose/prometheus$ ls
-docker-compose.yml  node_exporter-1.7.0.linux-amd64  node_exporter-1.7.0.linux-amd64.tar.gz  prometheus.yml
-ach@achllys:/opt/compose/prometheus$ cd prometheus.yml
--bash: cd: prometheus.yml: Not a directory
-ach@achllys:/opt/compose/prometheus$ cd prometheus.^C
-ach@achllys:/opt/compose/prometheus$ cat prometheus.yml
 global:
   scrape_interval: 15s
   scrape_timeout: 10s
   evaluation_interval: 15s
+
 alerting:
   alertmanagers:
     - static_configs:
-      - targets: []
-      scheme: http
-      timeout: 10s
-      api_version: v2
+        - targets:
+            - "alertmanager:9093"
+
+rule_files:
+  - "/etc/prometheus/rules/*.yml"
+
 scrape_configs:
-  - job_name: prometheus
-    honor_timestamps: true
-    scrape_interval: 15s
-    scrape_timeout: 10s
-    metrics_path: /metrics
-    scheme: http
+  - job_name: "prometheus"
     static_configs:
       - targets:
-        - localhost:9090
-  - job_name: elzim
+          - "localhost:9090"
+
+  - job_name: "node"
     static_configs:
-      - targets: ['192.168.50.206:9100']
-  - job_name: netdata
-    honor_timestamps: true
-    scrape_interval: 15s
-    scrape_timeout: 10s
-    metrics_path: /api/v1/allmetrics
-    params:
-      format: [prometheus]
-    scheme: http
-    static_configs:
-      - targets: ['IP:19999']
-  - job_name: cadvisor
+      - targets:
+          - "localhost:9100"
+
+  - job_name: "cadvisor"
     scrape_interval: 5s
     static_configs:
-      - targets: ['192.168.50.206:8080']
+      - targets:
+          - "localhost:8080"
+
   - job_name: "uptime"
     scrape_interval: 30s
-    scheme: http
-    metrics_path: "/metrics"
+    metrics_path: /metrics
+    basic_auth:
+      username: ""
+      password: ""
     static_configs:
-      - targets: ["kuma.achllys.com"]
-    basic_auth: # Only needed if authentication is enabled (default)
-      username: achllys
-      password: 2Qw6oqqDNkg5cs
+      - targets:
+          - "tld"
+
+  - job_name: "telegraf"
+    static_configs:
+      - targets:
+          - "localhost:9273"
+
+  - job_name: "zfs_exporter"
+    scrape_interval: 60s
+    scrape_timeout: 60s
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - "localhost:9134"
+    metric_relabel_configs:
+      - source_labels: ["name"]
+        regex: "^([^@]*).*"
+        target_label: "filesystem"
+        replacement: "$1"
+
+      - source_labels: ["name"]
+        regex: "^.*:.._(.*)$"
+        target_label: "snapshot_type"
+        replacement: "$1"
+
+  - job_name: "netdata"
+    metrics_path: /api/v1/allmetrics
+    params:
+      format: ["prometheus"]
+    static_configs:
+      - targets:
+          - "localhost:19999"

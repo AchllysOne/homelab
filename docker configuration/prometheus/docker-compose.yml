@@ -8,5 +8,11 @@ services:
       - "9090:9090"
     restart: unless-stopped
     volumes:
-      - /opt/compose/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - /ach/volumes/prometheus/data:/prometheus
+      - /ach/compose/prometheus:/etc/prometheus:ro
+      - /ach/volumes/prometheus:/prometheus
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    external: true

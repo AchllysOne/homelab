@@ -1,0 +1,15 @@
+services:
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    restart: unless-stopped
+    ports:
+      - "9093:9093"
+    volumes:
+      - /ach/compose/alertmanager:/etc/alertmanager:ro
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    external: true

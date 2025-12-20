@@ -1,0 +1,33 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: discord-default
+  group_by: ["alertname", "name", "instance"]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 2h
+
+  routes:
+  - matchers:
+    - category="container-lifecycle"
+    - severity="critical"
+    receiver: discord-critical
+
+receivers:
+- name: discord-default
+  discord_configs:
+  - webhook_url: ""
+    send_resolved: true
+
+- name: discord-critical
+  discord_configs:
+  - webhook_url: ""
+    send_resolved: true
+    title: "🚨 {{ .CommonAnnotations.summary }}"
+    message: |
+      **Alert:** {{ .CommonAnnotations.summary }}
+      **Status:** {{ .Status | toUpper }}
+      **Container:** {{ .CommonLabels.name }}
+      **Instance:** {{ .CommonLabels.instance }}
+      **Severity:** {{ .CommonLabels.severity }}

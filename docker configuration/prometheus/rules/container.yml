@@ -1,0 +1,20 @@
+groups:
+- name: container-lifecycle
+  rules:
+  - alert: ContainerCrashLoop3x5Min
+    expr: |
+      sum_over_time(
+        (
+          (time() - container_start_time_seconds{
+            name!~"^(prometheus|alertmanager|cadvisor|node_exporter)$",
+            name!="",
+            id=~"/system.slice/docker-.*"
+          }) < 30
+        )[5m:1m]
+      ) >= 3
+    for: 0s
+    labels:
+      severity: critical
+    annotations:
+      summary: "Container crash looping"
+      description: "Container {{ $labels.name }} restarted 3 times within 5 minutes on {{ $labels.instance }}."
