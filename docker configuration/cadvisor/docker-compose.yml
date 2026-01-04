@@ -1,16 +1,24 @@
-services:
   cadvisor:
-    image: ghcr.io/google/cadvisor:v0.53.0
+    image: gcr.io/cadvisor/cadvisor:latest
     container_name: cadvisor
     privileged: true
     devices:
       - /dev/kmsg
+    command:
+      - "--docker_only=true"
     ports:
       - "8080:8080"
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
       - /sys:/sys:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - /var/lib/docker:/var/lib/docker:ro
       - /dev/disk:/dev/disk:ro
     restart: unless-stopped
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    external: true

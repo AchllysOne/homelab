@@ -1,11 +1,58 @@
 services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: grafana_postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: grafana
+      POSTGRES_PASSWORD: grafana123
+      POSTGRES_DB: grafana
+
+    volumes:
+      - /ach/volumes/docker/postgres:/var/lib/postgresql/data
+
+    stop_grace_period: 2m
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U grafana -d grafana"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 90s
+
+    networks:
+      - monitoring
+
+
   grafana:
-    image: grafana/grafana-oss:latest
+    image: grafana/grafana:latest
     container_name: grafana
+    restart: unless-stopped
+
+    user: "472:472"
+
     ports:
       - "3008:3000"
+
     environment:
-      - TZ=America/Toronto
+      GF_DATABASE_TYPE: postgres
+      GF_DATABASE_HOST: grafana_postgres:5432
+      GF_DATABASE_NAME: grafana
+      GF_DATABASE_USER: grafana
+      GF_DATABASE_PASSWORD: grafana123
+
     volumes:
       - /ach/volumes/grafana:/var/lib/grafana
-    restart: unless-stopped
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    networks:
+      - monitoring
+
+
+networks:
+  monitoring:
+    external: true

@@ -1,19 +1,21 @@
 services:
-  peanut:
-    image: brandawg93/peanut:latest
-    container_name: peanut
-    restart: unless-stopped
-
-    ports:
-      - "8092:8080"
-
-    volumes:
-      - /ach/volumes/peanut:/config
-
+  nut_exporter:
+    image: ghcr.io/druggeri/nut_exporter:latest
+    container_name: nut_exporter
     environment:
-      - WEB_PORT=8080
-      - UPS_HOST=172.17.0.1        
-      - UPS_PORT=3493
-      - UPS_NAME=ups               # from: upsc -l
-      - UPS_USER=achllys
-      - UPS_PASSWORD=
+      - NUT_EXPORTER_SERVER=
+      - NUT_EXPORTER_SERVERPORT=3493
+      # optional auth (only ifls your NUT server requires it)
+      - NUT_EXPORTER_USERNAME=ups
+      - NUT_EXPORTER_PASSWORD=123
+      # optional: limit variables exported (comma-separated)
+      - NUT_EXPORTER_VARIABLES=ups.status,battery.charge,battery.runtime,ups.load,input.voltage,output.voltage
+    ports:
+      - "9199:9199"
+    restart: unless-stopped
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    external: true

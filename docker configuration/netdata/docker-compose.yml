@@ -36,7 +36,12 @@ services:
     ports:
       - "19999:19999"
 
+    networks:
+      - monitoring
 
+networks:
+  monitoring:
+    external: true
 
 
 

@@ -1,0 +1,33 @@
+services:
+  loki:
+    image: grafana/loki:3.4.1
+    container_name: loki
+    command: ["-config.file=/etc/loki/loki-config.yaml"]
+    volumes:
+      - ./loki-config.yaml:/etc/loki/loki-config.yaml:ro
+      - /ach/volumes/loki:/loki
+    networks:
+      - monitoring
+    restart: unless-stopped
+    # Keep this ONLY if you need access from outside Docker (browser, other hosts)
+    ports:
+      - "3100:3100"
+
+  promtail:
+    image: grafana/promtail:3.4.1
+    container_name: promtail
+    command: ["-config.file=/etc/promtail/promtail-config.yaml"]
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/log:/var/log:ro
+    networks:
+      - monitoring
+    depends_on:
+      - loki
+    restart: unless-stopped
+
+networks:
+  monitoring:
+    external: true
