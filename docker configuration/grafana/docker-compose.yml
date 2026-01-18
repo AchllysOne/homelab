@@ -6,12 +6,11 @@ services:
 
     environment:
       POSTGRES_USER: grafana
-      POSTGRES_PASSWORD: grafana123
+      POSTGRES_PASSWORD: 
       POSTGRES_DB: grafana
 
     volumes:
-      - /ach/volumes/docker/postgres:/var/lib/postgresql/data
-
+      - /path/volumes/postgres:/var/lib/postgresql/data
     stop_grace_period: 2m
 
     healthcheck:
@@ -40,10 +39,10 @@ services:
       GF_DATABASE_HOST: grafana_postgres:5432
       GF_DATABASE_NAME: grafana
       GF_DATABASE_USER: grafana
-      GF_DATABASE_PASSWORD: grafana123
+      GF_DATABASE_PASSWORD: 
 
     volumes:
-      - /ach/volumes/grafana:/var/lib/grafana
+      - /path/volumes/grafana:/var/lib/grafana
 
     depends_on:
       postgres:

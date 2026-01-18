@@ -9,10 +9,10 @@ services:
     devices:
       - /dev/dri:/dev/dri
     volumes:
-      - /ach/volumes/jellyfin:/config
-      - /ach/media/movies:/data/movies
-      - /ach/media/tv:/data/tv
-      - /ach/media/mixes:/data/mixes
+      - /path/volumes/jellyfin:/config
+      - /path/media/movies:/data/movies
+      - /path/media/tv:/data/tv
+      - /path/media/mixes:/data/mixes
     ports:
       - "8096:8096"
       - "8920:8920"

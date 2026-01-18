@@ -6,7 +6,7 @@ services:
     ports:
       - "8085:80"
     volumes:
-      - /ach/volumes/vaultwarden:/data:rw
+      - /path/volumes/vaultwarden:/data:rw
     environment:
       - ADMIN_TOKEN=
       - WEBSOCKET_ENABLED=true

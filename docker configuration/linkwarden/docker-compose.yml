@@ -1,29 +1,86 @@
 services:
   postgres:
     image: postgres:16-alpine
-    env_file: .env
-    restart: always
-    volumes:
-      - /ach/volumes/linkwarden/pgdata:/var/lib/postgresql/data
+    container_name: linkwarden-postgres
+    restart: unless-stopped
 
-  linkwarden:
     env_file: .env
-    environment:
-      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
-    restart: always
-    image: ghcr.io/linkwarden/linkwarden:latest
-    ports:
-      - 3006:3000
+
     volumes:
-      - /ach/volumes/linkwarden/data:/data/data
-    depends_on:
-      - postgres
-      - meilisearch
+      - /achz3/volumes/linkwarden/pgdata:/var/lib/postgresql/data
+
+    stop_grace_period: 2m
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+
+    networks:
+      - monitoring
+
 
   meilisearch:
     image: getmeili/meilisearch:v1.12.8
-    restart: always
-    env_file:
-      - .env
+    container_name: linkwarden-meilisearch
+    restart: unless-stopped
+
+    env_file: .env
+
     volumes:
-      - /ach/volumes/linkwarden/meili_data:/meili_data
+      - /path/volumes/linkwarden/meili_data:/meili_data
+
+    stop_grace_period: 1m
+
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+
+    networks:
+      - monitoring
+
+
+  linkwarden:
+    image: ghcr.io/linkwarden/linkwarden:latest
+    container_name: linkwarden
+    restart: unless-stopped
+
+    env_file: .env
+
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
+
+    ports:
+      - "3006:3000"
+
+    volumes:
+      - /path/volumes/linkwarden/data:/data/data
+
+    stop_grace_period: 1m
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      meilisearch:
+        condition: service_started
+
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+
+    networks:
+      - monitoring
+
+
+networks:
+  monitoring:
+    external: true

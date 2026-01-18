@@ -3,16 +3,17 @@ services:
     image: lscr.io/linuxserver/airsonic-advanced:latest
     container_name: airsonic-advanced
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Chicago
-      - CONTEXT_PATH= # optional
-      - JAVA_OPTS= # optional
+      PUID: 1000
+      PGID: 1000
+      TZ: America/Toronto
+      # Optional:
+      # CONTEXT_PATH: /airsonic
+      # JAVA_OPTS: "-Xms512m -Xmx2g"
     volumes:
-      - /ach/volumes/airsonic-advanced:/config
-      - /ach/media/music:/music
-      - /ach/media/airsonic-advanced/playlists:/playlists
-      - /ach/media/airsonic-advanced/podcasts:/podcasts
+      - /path/volumes/airsonic-advanced:/config
+      - /path/media/airsonic-advanced/music:/music:ro
+      - /path/media/airsonic-advanced/playlists:/playlists
+      - /path/media/airsonic-advanced/podcasts:/podcasts
     ports:
       - "4040:4040"
     restart: unless-stopped

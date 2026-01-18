@@ -12,8 +12,8 @@ services:
       - DIUN_WATCH_SCHEDULE=0 */6 * * *
       - DIUN_WATCH_JITTER=30s
       - DIUN_PROVIDERS_DOCKER=true
-      - DIUN_NOTIF_DISCORD_WEBHOOKURL=https://discord.com/api/webhooks/1449865145080614942/KlIsJxOPogGZct2Q0bVEIkzwNFxLFG7av4Qbwj3EAn5RayPrXuOXp3ntx6tPy7UQ6wUF
-      - DIUN_NOTIF_DISCORD_MENTIONS=<@1010584431427325993>
+      - DIUN_NOTIF_DISCORD_WEBHOOKURL=
+      - DIUN_NOTIF_DISCORD_MENTIONS=<@>
       - DIUN_NOTIF_DISCORD_RENDERFIELDS=true
       - DIUN_NOTIF_DISCORD_TIMEOUT=10s
       - DIUN_NOTIF_DISCORD_TEMPLATEBODY=Docker tag {{ .Entry.Image }} which you subscribed to through {{ .Entry.Provider }} provider has been released.

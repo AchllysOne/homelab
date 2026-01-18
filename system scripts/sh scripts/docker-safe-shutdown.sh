@@ -1,25 +1,54 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 LOG="/var/log/docker-safe-shutdown.log"
-exec >> "$LOG" 2>&1
+LOCKFILE="/run/docker-safe-shutdown.lock"
+STOP_TIMEOUT=60
+FORCE_WAIT=15
 
-echo "[$(date)] Starting Docker safe shutdown..."
+exec >>"$LOG" 2>&1
 
-STOPPED_CONTAINERS=""
+log() {
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"
+}
 
-docker ps --format "{{.Names}}" | while read -r name; do
-    echo "Stopping container $name"
-    docker stop -t 60 "$name" && echo "$name" >> /tmp/docker_stopped.list || true
-done
+cleanup() {
+  rm -f "$LOCKFILE"
+}
+trap cleanup EXIT
 
-sleep 15
+# Prevent double execution
+exec 9>"$LOCKFILE" || exit 1
+flock -n 9 || {
+  log "Another shutdown already in progress, exiting."
+  exit 0
+}
 
-REMAINING=$(docker ps -q || true)
-if [ -n "$REMAINING" ]; then
-    echo "Force stopping remaining containers..."
-    docker kill $REMAINING || true
+log "Starting Docker safe shutdown..."
+
+# Get container list once
+mapfile -t CONTAINERS < <(docker ps --format '{{.Names}}')
+
+if [[ ${#CONTAINERS[@]} -eq 0 ]]; then
+  log "No running containers."
+  exit 0
 fi
 
-echo "[$(date)] Docker shutdown complete."
-exit 0
+# Graceful stop
+for name in "${CONTAINERS[@]}"; do
+  log "Stopping container: $name"
+  docker stop -t "$STOP_TIMEOUT" "$name" || true
+done
+
+log "Waiting ${FORCE_WAIT}s for graceful shutdown..."
+sleep "$FORCE_WAIT"
+
+# Force kill anything still running
+REMAINING=$(docker ps -q || true)
+if [[ -n "$REMAINING" ]]; then
+  log "Force stopping remaining containers:"
+  docker ps --format ' - {{.Names}}'
+  docker kill $REMAINING || true
+fi
+
+log "Docker shutdown complete."

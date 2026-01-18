@@ -6,7 +6,7 @@ services:
     ports:
       - "9093:9093"
     volumes:
-      - /ach/compose/alertmanager:/etc/alertmanager:ro
+      - /path/compose/alertmanager:/etc/alertmanager:ro
     networks:
       - monitoring
 

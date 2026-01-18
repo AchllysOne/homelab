@@ -1,0 +1,19 @@
+services:
+  blackbox_exporter:
+    image: quay.io/prometheus/blackbox-exporter:latest
+    container_name: blackbox_exporter
+    command:
+      - --config.file=/data/blackbox.yml
+    ports:
+      - "9115:9115"
+    volumes:
+      - /path/volumes/blackbox-exporter:/data:ro
+    cap_add:
+      - NET_RAW
+    networks:
+      - monitoring
+    restart: unless-stopped
+
+networks:
+  monitoring:
+    external: true
