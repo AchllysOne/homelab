@@ -1,0 +1,22 @@
+services:
+  telegraf:
+    image: telegraf:latest
+    container_name: telegraf
+    restart: unless-stopped
+    privileged: true
+
+    networks:
+      - monitoring
+
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - /usr/sbin/zpool_influxdb:/usr/sbin/zpool_influxdb:ro
+      - /sbin/zpool:/sbin/zpool:ro
+      - /sbin/zfs:/sbin/zfs:ro
+      - /dev/zfs:/dev/zfs
+      - /proc:/proc:ro
+      - /sys:/sys:ro
+
+networks:
+  monitoring:
+    external: true

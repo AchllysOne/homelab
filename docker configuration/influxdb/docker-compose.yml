@@ -1,0 +1,15 @@
+services:
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    restart: unless-stopped
+    ports:
+      - "8086:8086"
+    volumes:
+      - /path/volumes/influxdb:/var/lib/influxdb
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    external: true

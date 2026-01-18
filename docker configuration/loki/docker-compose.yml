@@ -1,32 +1,31 @@
 services:
   loki:
-    image: grafana/loki:3.4.1
+    image: grafana/grafana
     container_name: loki
-    command: ["-config.file=/etc/loki/loki-config.yaml"]
-    volumes:
-      - ./loki-config.yaml:/etc/loki/loki-config.yaml:ro
-      - /ach/volumes/loki:/loki
-    networks:
-      - monitoring
-    restart: unless-stopped
-    # Keep this ONLY if you need access from outside Docker (browser, other hosts)
+    command: -config.file=/etc/loki/loki.yml
     ports:
       - "3100:3100"
-
-  promtail:
-    image: grafana/promtail:3.4.1
-    container_name: promtail
-    command: ["-config.file=/etc/promtail/promtail-config.yaml"]
     volumes:
-      - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml:ro
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /var/log:/var/log:ro
+      - /path/compose/alloy-loki/loki/loki.yml:/etc/loki/loki.yml:ro
+      - /path/volumes/loki:/loki
+    restart: unless-stopped
     networks:
       - monitoring
+
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
+    command: run /etc/alloy/config.alloy --server.http.listen-addr=0.0.0.0:12345
+    ports:
+      - "12345:12345"
+    volumes:
+      - /path/compose/alloy-loki/alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
       - loki
     restart: unless-stopped
+    networks:
+      - monitoring
 
 networks:
   monitoring:
