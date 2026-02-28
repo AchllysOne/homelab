@@ -1,0 +1,19 @@
+services:
+  vrchat-exporter:
+    build: .
+    container_name: vrchat-exporter
+    restart: unless-stopped
+    ports:
+      - "9101:9101"
+    env_file:
+      - .env
+    environment:
+      - EXPORTER_PORT=9101
+      - SCRAPE_INTERVAL=120
+    networks:
+      - <network>
+
+networks:
+  private_network:
+    external: true
+    name: <network>

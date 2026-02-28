@@ -6,23 +6,6 @@ Polls the VRChat API, exposes metrics as Prometheus gauges/counters, and visuali
 
 > ⚠️ **Disclaimer**: VRChat's API is not officially documented or supported. This project uses the community-documented API. Do not exceed rate limits (1 request per 60 seconds). Abuse may result in account termination. Use responsibly per VRChat's Terms of Service.
 
----
-
-## Architecture
-
-```
-┌──────────────┐  scrape  ┌─────────────┐  query  ┌──────────┐
-│  VRChat API  │◄─────────│  Exporter   │◄────────│Prometheus│◄─────┐
-│  (REST)      │          │  :9100      │         │  :9090   │      │
-└──────────────┘          └─────────────┘         └──────────┘      │
-                                                       ▲            │
-                                                       │ datasource │
-                                                  ┌────┴─────┐     │
-                                                  │  Grafana  │─────┘
-                                                  │  :3000    │
-                                                  └───────────┘
-```
-
 ## Metrics Collected
 
 | Metric | Type | Description |

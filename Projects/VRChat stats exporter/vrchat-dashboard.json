@@ -1,0 +1,184 @@
+{
+  "annotations": { "list": [{ "builtIn": 1, "datasource": { "type": "grafana", "uid": "-- Grafana --" }, "enable": true, "hide": true, "iconColor": "rgba(0, 211, 255, 1)", "name": "Annotations & Alerts", "type": "dashboard" }] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": 15,
+  "links": [],
+  "panels": [
+
+    { "collapsed": false, "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 }, "id": 100, "title": "🟢 Platform & Health", "type": "row" },
+
+    { "fieldConfig": { "defaults": { "mappings": [{ "options": { "0": { "color": "red", "text": "DOWN" }, "1": { "color": "green", "text": "OK" } }, "type": "value" }], "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": 0 }, { "color": "green", "value": 1 }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 1 }, "id": 21,
+      "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] }, "textMode": "auto" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_api_healthy", "refId": "A" }],
+      "title": "API Status", "type": "stat" },
+
+    { "fieldConfig": { "defaults": { "color": { "fixedColor": "blue", "mode": "fixed" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": 0 }] }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 1 }, "id": 22,
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_online_users_total", "refId": "A" }],
+      "title": "VRChat Online Users", "type": "stat" },
+
+    { "fieldConfig": { "defaults": { "color": { "fixedColor": "green", "mode": "fixed" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": 0 }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 1 }, "id": 23,
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_friends_online", "refId": "A" }],
+      "title": "Friends Online", "type": "stat" },
+
+    { "fieldConfig": { "defaults": { "color": { "fixedColor": "yellow", "mode": "fixed" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "yellow", "value": 0 }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 1 }, "id": 24,
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_friends_active", "refId": "A" }],
+      "title": "Friends Active", "type": "stat" },
+
+    { "fieldConfig": { "defaults": { "color": { "fixedColor": "purple", "mode": "fixed" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": 0 }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 1 }, "id": 25,
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_friends_total", "refId": "A" }],
+      "title": "Friends Total", "type": "stat" },
+
+    { "fieldConfig": { "defaults": { "color": { "fixedColor": "blue", "mode": "fixed" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": 0 }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 1 }, "id": 51,
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_worlds_cached_total", "refId": "A" }],
+      "title": "Worlds Cached", "type": "stat" },
+
+
+    { "collapsed": false, "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 }, "id": 101, "title": "📈 Trends Over Time", "type": "row" },
+
+    { "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "drawStyle": "line", "fillOpacity": 15, "lineWidth": 2, "spanNulls": true, "showPoints": "auto" }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 }, "id": 27,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true }, "tooltip": { "mode": "single" } },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_online_users_total", "legendFormat": "Online Users", "refId": "A" }],
+      "title": "VRChat Total Online Users", "type": "timeseries" },
+
+    { "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2, "spanNulls": true, "showPoints": "auto" }, "unit": "short" },
+      "overrides": [
+        { "matcher": { "id": "byName", "options": "Online" },  "properties": [{ "id": "color", "value": { "fixedColor": "green",  "mode": "fixed" } }] },
+        { "matcher": { "id": "byName", "options": "Active" },  "properties": [{ "id": "color", "value": { "fixedColor": "yellow", "mode": "fixed" } }] },
+        { "matcher": { "id": "byName", "options": "Offline" }, "properties": [{ "id": "color", "value": { "fixedColor": "red",    "mode": "fixed" } }] }
+      ] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 }, "id": 28,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true }, "tooltip": { "mode": "multi" } },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_friends_online",  "legendFormat": "Online",  "refId": "A" },
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_friends_active",  "legendFormat": "Active",  "refId": "B" },
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_friends_offline", "legendFormat": "Offline", "refId": "C" }
+      ],
+      "title": "Friends Online / Active / Offline", "type": "timeseries" },
+
+
+    { "collapsed": false, "gridPos": { "h": 1, "w": 24, "x": 0, "y": 14 }, "id": 102, "title": "👥 Friend Breakdown", "type": "row" },
+
+    { "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "hideFrom": { "legend": false, "tooltip": false, "viz": false } } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 15 }, "id": 29,
+      "options": { "legend": { "displayMode": "table", "placement": "right", "showLegend": true }, "pieType": "pie", "reduceOptions": { "calcs": ["lastNotNull"] }, "sort": "desc" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_friend_by_status", "legendFormat": "{{status}}", "refId": "A" }],
+      "title": "Friends by Status (now)", "type": "piechart" },
+
+    { "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "hideFrom": { "legend": false, "tooltip": false, "viz": false } } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 15 }, "id": 30,
+      "options": { "legend": { "displayMode": "table", "placement": "right", "showLegend": true }, "pieType": "pie", "reduceOptions": { "calcs": ["lastNotNull"] }, "sort": "desc" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_friend_by_platform", "legendFormat": "{{platform}}", "refId": "A" }],
+      "title": "Friends by Platform (now)", "type": "piechart" },
+
+    { "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2, "spanNulls": true, "showPoints": "auto", "stacking": { "group": "A", "mode": "normal" } }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 15 }, "id": 110,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true }, "tooltip": { "mode": "multi" } },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_friend_by_status{status=\"active\"}",   "legendFormat": "Active",  "refId": "A" },
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_friend_by_status{status=\"join me\"}",  "legendFormat": "Join Me", "refId": "B" },
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_friend_by_status{status=\"ask me\"}",  "legendFormat": "Ask Me",  "refId": "C" },
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_friend_by_status{status=\"busy\"}",    "legendFormat": "Busy",    "refId": "D" }
+      ],
+      "title": "Friends by Status Over Time", "type": "timeseries" },
+
+    { "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2, "spanNulls": true, "showPoints": "auto", "stacking": { "group": "A", "mode": "normal" } }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 23 }, "id": 111,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true }, "tooltip": { "mode": "multi" } },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_friend_by_platform", "legendFormat": "{{platform}}", "refId": "A" }],
+      "title": "Friends by Platform Over Time", "type": "timeseries" },
+
+    { "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "drawStyle": "line", "fillOpacity": 10, "lineWidth": 2, "spanNulls": true, "showPoints": "auto" }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 23 }, "id": 112,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true }, "tooltip": { "mode": "multi" } },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "topk(5, vrchat_friend_by_world)", "legendFormat": "{{world_name}}", "refId": "A" }],
+      "title": "Top Worlds by Friend Count Over Time", "type": "timeseries" },
+
+
+    { "collapsed": false, "gridPos": { "h": 1, "w": 24, "x": 0, "y": 31 }, "id": 103, "title": "🌍 World Stats", "type": "row" },
+
+    { "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "hideFrom": { "legend": false, "tooltip": false, "viz": false } } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 32 }, "id": 60,
+      "options": { "legend": { "displayMode": "table", "placement": "right", "showLegend": true }, "pieType": "donut", "reduceOptions": { "calcs": ["lastNotNull"] }, "sort": "desc" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "topk(8, vrchat_friend_by_world)", "legendFormat": "{{world_name}}", "refId": "A" }],
+      "title": "Top Worlds by Friend Count (now)", "type": "piechart" },
+
+    { "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": 0 }, { "color": "green", "value": 10 }] }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 32 }, "id": 62,
+      "options": { "displayMode": "gradient", "orientation": "horizontal", "reduceOptions": { "calcs": ["lastNotNull"] }, "showUnfilled": true, "valueMode": "color" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "topk(10, vrchat_world_occupants)", "legendFormat": "{{world_name}}", "refId": "A" }],
+      "title": "Top Worlds by Current Occupants", "type": "bargauge" },
+
+    { "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": 0 }, { "color": "green", "value": 1000 }, { "color": "yellow", "value": 100000 }] }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 32 }, "id": 61,
+      "options": { "displayMode": "gradient", "orientation": "horizontal", "reduceOptions": { "calcs": ["lastNotNull"] }, "showUnfilled": true, "valueMode": "color" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "topk(10, vrchat_world_visits)", "legendFormat": "{{world_name}}", "refId": "A" }],
+      "title": "Top Worlds by Visit Count", "type": "bargauge" },
+
+    { "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "drawStyle": "line", "fillOpacity": 8, "lineWidth": 2, "spanNulls": true, "showPoints": "auto" }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 40 }, "id": 113,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true }, "tooltip": { "mode": "multi" } },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "topk(5, vrchat_world_occupants)", "legendFormat": "{{world_name}}", "refId": "A" }],
+      "title": "Top Worlds by Occupants Over Time", "type": "timeseries" },
+
+    { "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "drawStyle": "line", "fillOpacity": 8, "lineWidth": 2, "spanNulls": true, "showPoints": "auto" }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 40 }, "id": 114,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true }, "tooltip": { "mode": "multi" } },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "topk(5, vrchat_world_visits)", "legendFormat": "{{world_name}}", "refId": "A" }],
+      "title": "Top Worlds by Visits Over Time", "type": "timeseries" },
+
+    { "fieldConfig": { "defaults": { "custom": { "align": "left", "cellOptions": { "type": "auto" }, "filterable": true }, "mappings": [], "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": 0 }] } },
+      "overrides": [{ "matcher": { "id": "byName", "options": "Visits" }, "properties": [{ "id": "custom.width", "value": 120 }] }] },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 48 }, "id": 63,
+      "options": { "cellHeight": "sm", "showHeader": true, "sortBy": [{ "desc": true, "displayName": "Visits" }] },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_world_visits", "format": "table", "instant": true, "refId": "A" }],
+      "title": "Cached Worlds — Visits",
+      "transformations": [{ "id": "organize", "options": { "excludeByName": { "Time": true, "__name__": true, "instance": true, "job": true }, "renameByName": { "world_name": "World", "world_id": "ID", "author_name": "Author", "Value": "Visits" } } }],
+      "type": "table" },
+
+
+    { "collapsed": false, "gridPos": { "h": 1, "w": 24, "x": 0, "y": 58 }, "id": 104, "title": "🏠 Active Instances", "type": "row" },
+
+    { "fieldConfig": { "defaults": { "custom": { "align": "left", "cellOptions": { "type": "auto" }, "filterable": true }, "mappings": [], "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": 0 }] } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 59 }, "id": 70,
+      "options": { "cellHeight": "sm", "showHeader": true, "sortBy": [{ "desc": false, "displayName": "World" }] },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_instance_player_count", "format": "table", "instant": true, "refId": "A" }],
+      "title": "Active Instances (friends' worlds)",
+      "transformations": [{ "id": "organize", "options": { "excludeByName": { "Time": true, "__name__": true, "instance": true, "job": true, "region": true, "Value": true }, "indexByName": { "world_name": 0, "world_id": 1, "instance_id": 2, "instance_type": 3 }, "renameByName": { "world_name": "World", "world_id": "World ID", "instance_id": "Instance", "instance_type": "Type" } } }],
+      "type": "table" },
+
+
+    { "collapsed": false, "gridPos": { "h": 1, "w": 24, "x": 0, "y": 67 }, "id": 108, "title": "⚙️ Exporter Health", "type": "row" },
+
+    { "fieldConfig": { "defaults": { "color": { "fixedColor": "light-blue", "mode": "fixed" }, "custom": { "drawStyle": "line", "fillOpacity": 20, "lineWidth": 1, "spanNulls": false }, "unit": "s" }, "overrides": [] },
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 68 }, "id": 32,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true }, "tooltip": { "mode": "single" } },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "vrchat_scrape_duration_seconds", "legendFormat": "Scrape Duration", "refId": "A" }],
+      "title": "Scrape Duration", "type": "timeseries" }
+
+  ],
+  "preload": false,
+  "refresh": "2m",
+  "schemaVersion": 42,
+  "tags": ["vrchat", "gaming", "social"],
+  "templating": { "list": [] },
+  "time": { "from": "now-1h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "VRChat Monitoring v2",
+  "uid": "vrchat-monitoring",
+  "version": 20
+}
